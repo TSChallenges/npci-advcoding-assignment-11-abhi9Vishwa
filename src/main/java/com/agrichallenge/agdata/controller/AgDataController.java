@@ -30,12 +30,47 @@ public class AgDataController {
     }
 
     // TODO: GET /api/agdata/crop-count?cropName=corn
-
+    @GetMapping("/crop-count")
+    public ResponseEntity<String> getCropCount(@RequestParam (required = true) String cropName){
+        try {
+            Long res = agDataService.getCropCount(cropName);
+            if(res == -1){
+                return new ResponseEntity<>("No data", HttpStatus.NO_CONTENT);
+            }
+            else
+                return new ResponseEntity<>(String.valueOf(res), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     // TODO: GET /api/agdata/average-yield?cropName=wheat
-
+    @GetMapping("/average-yield")
+    public ResponseEntity<String> getAvgYeild(@RequestParam (required = true) String cropName){
+        try {
+            double res = agDataService.getAverageYield(cropName);
+            if(res == -1){
+                return new ResponseEntity<>("No data", HttpStatus.NO_CONTENT);
+            }
+            else
+                return new ResponseEntity<>(String.valueOf(res), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     // TODO: GET /api/agdata/by-region?region=Midwest
-
+    @GetMapping("/by-region")
+    public ResponseEntity<?> filterByRegion( @RequestParam (required = true) String region){
+        try {
+            List<AgData> res = agDataService.getRecordsByRegion(region);
+            if(res == null || res.isEmpty()){
+                return new ResponseEntity<>("No data", HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
